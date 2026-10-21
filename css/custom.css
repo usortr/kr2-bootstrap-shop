@@ -1,0 +1,279 @@
+:root {
+  --bg: #141815;
+  --surface: #1c221e;
+  --surface-2: #232b26;
+  --border: #333d36;
+  --text: #e6ebe7;
+  --muted: #9aa79e;
+  --accent: #4c7a5c;
+  --accent-hover: #639477;
+  --accent-soft: #24352a;
+  --danger: #b85c5c;
+  --header-h: 72px;
+
+  /* Подключаем палитру к переменным Bootstrap */
+  --bs-primary: #4c7a5c;
+  --bs-primary-rgb: 76, 122, 92;
+  --bs-link-color: var(--accent-hover);
+  --bs-link-color-rgb: 99, 148, 119;
+  --bs-link-hover-color: #7fb094;
+  --bs-body-bg: var(--bg);
+  --bs-body-color: var(--text);
+  --bs-border-color: var(--border);
+  --bs-secondary-color: var(--muted);
+  --bs-emphasis-color: var(--text);
+}
+
+html { scroll-padding-top: calc(var(--header-h) + 16px); }
+
+body {
+  padding-top: var(--header-h);
+  background-color: var(--bg);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+main { flex: 1 0 auto; }
+footer { flex-shrink: 0; }
+[hidden] { display: none !important; }
+
+.text-muted { color: var(--muted) !important; }
+.lead { color: var(--muted); }
+
+/* Ссылки в контенте */
+a { color: var(--accent-hover); }
+a:hover { color: #7fb094; }
+
+/* === 1. ЕДИНАЯ ШАПКА === */
+.site-navbar {
+  min-height: var(--header-h);
+  background-color: var(--surface) !important;
+  border-bottom: 1px solid var(--border);
+}
+.site-navbar .navbar-brand { color: var(--text); font-weight: 700; }
+.site-navbar .navbar-brand i { color: var(--accent-hover); }
+.site-navbar .nav-link { color: var(--muted); transition: color .2s; }
+.site-navbar .nav-link:hover,
+.site-navbar .nav-link:focus-visible { color: var(--text); }
+.site-navbar .nav-link.active,
+.site-navbar .nav-link[aria-current="page"] {
+  color: var(--accent-hover);
+  /* font-weight не меняем — иначе пункт "прыгает" по ширине */
+  position: relative;
+}
+.site-navbar .nav-link.active::after,
+.site-navbar .nav-link[aria-current="page"]::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 4px;
+  height: 2px;
+  background-color: var(--accent-hover);
+  border-radius: 2px;
+}
+
+.site-navbar .nav-link:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+.site-navbar .navbar-toggler { border-color: var(--border); }
+
+.cart-link { color: var(--muted) !important; opacity: 0.6; transition: opacity 0.2s, color .2s; }
+.cart-link:hover { opacity: 1; color: var(--text) !important; }
+
+/* === 2. КНОПКИ === */
+.btn-primary {
+  --bs-btn-bg: var(--accent);
+  --bs-btn-border-color: var(--accent);
+  --bs-btn-hover-bg: var(--accent-hover);
+  --bs-btn-hover-border-color: var(--accent-hover);
+  --bs-btn-active-bg: #3e6549;
+  --bs-btn-active-border-color: #3e6549;
+  --bs-btn-disabled-bg: var(--accent);
+  --bs-btn-disabled-border-color: var(--accent);
+  --bs-btn-focus-shadow-rgb: 99, 148, 119;
+}
+
+.btn-outline-primary {
+  --bs-btn-color: var(--accent-hover);
+  --bs-btn-border-color: var(--accent-hover);
+  --bs-btn-hover-bg: var(--accent);
+  --bs-btn-hover-border-color: var(--accent);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-bg: #3e6549;
+  --bs-btn-active-border-color: #3e6549;
+  --bs-btn-active-color: #fff;
+  --bs-btn-focus-shadow-rgb: 99, 148, 119;
+}
+
+/* === 3. ХЛЕБНЫЕ КРОШКИ === */
+.breadcrumb-item a { color: var(--muted); transition: color .2s; }
+.breadcrumb-item a:hover { color: var(--accent-hover); }
+.breadcrumb-item.active { color: var(--text); }
+.breadcrumb-item + .breadcrumb-item::before { color: var(--muted); }
+
+/* === 4. КАРТОЧКИ ТОВАРОВ === */
+.product-card {
+  overflow: hidden;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.product-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-hover);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
+}
+
+.product-image-placeholder {
+  height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg);
+  border-bottom: 1px solid var(--border);
+  text-decoration: none;
+  border-top-left-radius: calc(var(--bs-border-radius) - 1px);
+  border-top-right-radius: calc(var(--bs-border-radius) - 1px);
+  transition: background-color .18s ease;
+}
+.product-image-placeholder:hover { background-color: var(--accent-soft); }
+
+.product-image-placeholder .bi {
+  font-size: 5rem;
+  color: var(--muted) !important;
+  transition: color .18s ease, transform .18s ease;
+}
+.product-image-placeholder:hover .bi {
+  color: var(--accent-hover) !important;
+  transform: scale(1.05);
+}
+
+.product-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.price { color: var(--accent-hover); font-weight: 700; }
+.old-price { color: var(--muted); text-decoration: line-through; font-size: 0.85rem; }
+
+.product-card h3 a,
+.product-card .text-reset { transition: color .18s; }
+.product-card:hover h3 a { color: var(--accent-hover) !important; }
+
+.product-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.9rem;
+}
+.product-rating .bi-star-fill {
+  color: #f5c542;
+  font-size: 0.95rem;
+}
+
+/* === 5. КНОПКА "НАВЕРХ" === */
+.back-to-top {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid var(--accent-hover);
+  background-color: var(--accent);
+  color: #fff;
+  z-index: 1045;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease, visibility 0.2s ease, background-color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+.back-to-top:hover {
+  background-color: var(--accent-hover);
+  color: #fff;
+}
+
+/* === 6. ФОРМЫ === */
+.form-control, .form-select {
+  background-color: var(--bg);
+  border-color: var(--border);
+  color: var(--text);
+}
+.form-control:focus, .form-select:focus {
+  background-color: var(--bg);
+  border-color: var(--accent-hover);
+  color: var(--text);
+  box-shadow: 0 0 0 0.2rem rgba(99, 148, 119, 0.25);
+}
+.form-label, .form-check-label { color: var(--text); }
+.form-text { color: var(--muted); }
+
+.form-check-input:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+.form-check-input:focus {
+  border-color: var(--accent-hover);
+  box-shadow: 0 0 0 .2rem rgba(99, 148, 119, .25);
+}
+.form-check-input:checked:focus {
+  box-shadow: 0 0 0 .2rem rgba(99, 148, 119, .35);
+}
+
+/* === 7. МОДАЛКИ === */
+.modal-content {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+.modal-header, .modal-footer { border-color: var(--border); }
+.btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
+
+/* === 8. TOAST === */
+.toast-container {
+  position: fixed;
+  top: calc(var(--header-h) + 12px);
+  right: 16px;
+  z-index: 1090;
+}
+.toast {
+  background-color: var(--accent-soft);
+  border: 1px solid var(--accent-hover);
+  color: var(--text);
+}
+
+/* === 9. ПОДВАЛ === */
+.site-footer {
+  background-color: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+}
+
+/* === STICKY-ФИЛЬТР В КАТАЛОГЕ === */
+.sticky-sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+  /* не даём карточке растягиваться на всю высоту колонки */
+  align-self: flex-start;
+}
+
+/* На узких экранах sticky отключаем — фильтр и так идёт сверху */
+@media (max-width: 991.98px) {
+  .sticky-sidebar {
+    position: static;
+    top: auto;
+  }
+}

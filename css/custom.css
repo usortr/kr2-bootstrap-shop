@@ -189,7 +189,22 @@ a:hover { color: #7fb094; }
 .product-card__title { transition: color .18s; }
 .product-card:hover .product-card__title { color: var(--accent-hover); }
 
+.product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
 .product-card__rating .bi-star-fill { color: #f5c542; }
+.product-card__rating-value { font-weight: 600; }
+.product-card__rating-reviews { font-size: 0.85rem; }
+
+/* Модификатор для страницы товара */
+.product-card__rating--lg {
+  font-size: 1rem;
+}
+.product-card__rating--lg .bi-star-fill { font-size: 1.15rem; }
 
 .product-card__price { color: var(--accent-hover); font-weight: 700; }
 .product-card__old-price { color: var(--muted); text-decoration: line-through; font-size: 0.85rem; }

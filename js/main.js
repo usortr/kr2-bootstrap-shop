@@ -139,9 +139,8 @@ function createProductCard(product) {
           <a href="product.html?id=${product.id}" class="text-decoration-none text-reset">
             <h3 class="h6 mb-2 product-card__title">${product.name}</h3>
           </a>
-          <div class="product-card__rating mb-2">
-            <i class="bi bi-star-fill"></i> ${product.rating}
-            <span class="text-muted ms-1">(${product.reviews})</span>
+          <div class="mb-2">
+            ${createRatingHtml(product)}
           </div>
           <div class="mb-3">
             <span class="product-card__price">${product.price.toLocaleString('ru-RU')} ₽</span>
@@ -186,6 +185,9 @@ function renderProductDetail(product) {
     <div class="col-lg-6">
       ${badgeHtml}
       <h1 class="h3 fw-bold mb-3">${product.name}</h1>
+      <div class="mb-3">
+        ${createRatingHtml(product, 'lg')}
+      </div>
       <p class="text-muted mb-4">${product.description}</p>
       <div class="mb-4">
         <span class="product-card__price fs-3">${product.price.toLocaleString('ru-RU')} ₽</span>
@@ -386,4 +388,16 @@ function resetContactExtras() {
     chip.classList.remove('is-active');
     chip.setAttribute('aria-pressed', 'false');
   });
+}
+
+// Функция создания HTML-блока рейтинга (переиспользуется в карточке и на странице товара)
+function createRatingHtml(product, modifier = '') {
+  const modifierClass = modifier ? ` product-card__rating--${modifier}` : '';
+  return `
+    <div class="product-card__rating${modifierClass}">
+      <i class="bi bi-star-fill"></i>
+      <span class="product-card__rating-value">${product.rating}</span>
+      <span class="product-card__rating-reviews text-muted ms-1">(${product.reviews} отзывов)</span>
+    </div>
+  `;
 }

@@ -314,3 +314,84 @@ a:hover { color: #7fb094; }
   color: var(--muted);
 }
 .site-footer__text { color: var(--muted); }
+
+/* === FAQ (блок faq) === */
+.faq {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.faq__item {
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--bs-border-radius);
+  overflow: hidden;
+  transition: border-color 0.18s ease;
+}
+
+.faq__item[open] {
+  border-color: var(--accent-hover);
+}
+
+.faq__item:hover {
+  border-color: var(--accent-hover);
+}
+
+.faq__question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+  transition: color 0.18s ease, background-color 0.18s ease;
+}
+
+.faq__question::-webkit-details-marker {
+  display: none;
+}
+
+.faq__question::after {
+  content: "\F282"; /* bi-chevron-down */
+  font-family: "bootstrap-icons";
+  font-size: 0.9rem;
+  color: var(--muted);
+  transition: transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+}
+
+.faq__item[open] .faq__question::after {
+  transform: rotate(180deg);
+  color: var(--accent-hover);
+}
+
+.faq__question:hover {
+  background-color: var(--accent-soft);
+  color: var(--accent-hover);
+}
+
+.faq__question:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: -2px;
+}
+
+.faq__answer {
+  padding: 0 1.25rem 1rem;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+/* Плавное появление ответа */
+.faq__item[open] .faq__answer {
+  animation: faq-fade 0.2s ease;
+}
+
+@keyframes faq-fade {
+  from { opacity: 0; transform: translateY(-4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

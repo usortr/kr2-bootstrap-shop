@@ -2,13 +2,13 @@
 
 document.addEventListener('DOMContentLoaded', () => {
 
-  // 0. Подсветка текущего пункта меню
+  // 0. Подсветка текущего пункта меню (включая корзину)
   const currentFile = location.pathname.split('/').pop() || 'index.html';
-  document.querySelectorAll('.site-navbar .nav-link').forEach(link => {
+  document.querySelectorAll('.site-navbar a.nav-link').forEach(link => {
     const href = link.getAttribute('href');
     const isCatalogOnProduct = currentFile === 'product.html' && href === 'catalog.html';
     if (href === currentFile || isCatalogOnProduct) {
-      link.classList.add('active');
+      link.classList.add('site-navbar__link--active');
       link.setAttribute('aria-current', 'page');
     }
   });
@@ -62,7 +62,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       event.preventDefault();
 
-      // Показываем Toast
       const toastEl = document.getElementById('successToast');
       if (toastEl) {
         const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
@@ -72,22 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
       form.reset();
       form.classList.remove('was-validated');
 
-      // Закрываем модалку
       const modalInstance = bootstrap.Modal.getInstance(orderModal);
       if (modalInstance) modalInstance.hide();
 
-      // Если это форма заказа, очищаем корзину
       if (form.id === 'checkout-form') {
         clearCart();
       }
     });
   });
 
-  // 6. Кнопка "Наверх" (через класс .is-visible)
+  // 6. Кнопка "Наверх" (модификатор back-to-top--visible)
   const backToTopBtn = document.getElementById('backToTop');
   if (backToTopBtn) {
     const toggleBackToTop = () => {
-      backToTopBtn.classList.toggle('is-visible', window.scrollY > 200);
+      backToTopBtn.classList.toggle('back-to-top--visible', window.scrollY > 200);
     };
     window.addEventListener('scroll', toggleBackToTop, { passive: true });
     toggleBackToTop();
@@ -116,14 +113,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Функция создания HTML карточки товара
+// Функция создания HTML карточки товара (БЭМ-классы для своих элементов)
 function createProductCard(product) {
-  const badgeHtml = product.badge 
-    ? `<span class="badge text-bg-danger product-badge">${product.badge}</span>` 
+  const badgeHtml = product.badge
+    ? `<span class="badge text-bg-danger product-card__badge">${product.badge}</span>`
     : '';
-  
-  const oldPriceHtml = product.oldPrice 
-    ? `<span class="old-price ms-2">${product.oldPrice.toLocaleString('ru-RU')} ₽</span>` 
+
+  const oldPriceHtml = product.oldPrice
+    ? `<span class="product-card__old-price ms-2">${product.oldPrice.toLocaleString('ru-RU')} ₽</span>`
     : '';
 
   return `
@@ -131,20 +128,20 @@ function createProductCard(product) {
       <article class="card product-card h-100 position-relative">
         ${badgeHtml}
         <a href="product.html?id=${product.id}" class="text-decoration-none">
-          <div class="product-image-placeholder">
-            <i class="bi ${product.icon}"></i>
+          <div class="product-card__image">
+            <i class="bi ${product.icon} product-card__icon"></i>
           </div>
         </a>
         <div class="card-body d-flex flex-column">
           <a href="product.html?id=${product.id}" class="text-decoration-none text-reset">
-            <h3 class="h6 mb-2">${product.name}</h3>
+            <h3 class="h6 mb-2 product-card__title">${product.name}</h3>
           </a>
-          <div class="product-rating mb-2">
+          <div class="product-card__rating mb-2">
             <i class="bi bi-star-fill"></i> ${product.rating}
             <span class="text-muted ms-1">(${product.reviews})</span>
           </div>
           <div class="mb-3">
-            <span class="price">${product.price.toLocaleString('ru-RU')} ₽</span>
+            <span class="product-card__price">${product.price.toLocaleString('ru-RU')} ₽</span>
             ${oldPriceHtml}
           </div>
           <button class="btn btn-primary btn-sm w-100 mt-auto" onclick="addToCart(${product.id})">
@@ -156,16 +153,16 @@ function createProductCard(product) {
   `;
 }
 
-// Функция рендеринга детальной страницы товара
+// Функция рендеринга детальной страницы товара (БЭМ-классы для своих элементов)
 function renderProductDetail(product) {
   document.title = `${product.name} — ShopMarket`;
-  
-  const badgeHtml = product.badge 
-    ? `<span class="badge text-bg-danger mb-3">${product.badge}</span>` 
+
+  const badgeHtml = product.badge
+    ? `<span class="badge text-bg-danger mb-3">${product.badge}</span>`
     : '';
-  
-  const oldPriceHtml = product.oldPrice 
-    ? `<span class="old-price ms-2">${product.oldPrice.toLocaleString('ru-RU')} ₽</span>` 
+
+  const oldPriceHtml = product.oldPrice
+    ? `<span class="product-card__old-price ms-2">${product.oldPrice.toLocaleString('ru-RU')} ₽</span>`
     : '';
 
   const specsHtml = product.specs.map(spec => `
@@ -178,8 +175,8 @@ function renderProductDetail(product) {
   document.getElementById('product-detail').innerHTML = `
     <div class="col-lg-6">
       <div class="card overflow-hidden">
-        <div class="product-image-placeholder product-media--lg rounded-0">
-          <i class="bi ${product.icon}"></i>
+        <div class="product-card__image product-card__image--lg rounded-0">
+          <i class="bi ${product.icon} product-card__icon"></i>
         </div>
       </div>
     </div>
@@ -188,7 +185,7 @@ function renderProductDetail(product) {
       <h1 class="h3 fw-bold mb-3">${product.name}</h1>
       <p class="text-muted mb-4">${product.description}</p>
       <div class="mb-4">
-        <span class="price fs-3">${product.price.toLocaleString('ru-RU')} ₽</span>
+        <span class="product-card__price fs-3">${product.price.toLocaleString('ru-RU')} ₽</span>
         ${oldPriceHtml}
       </div>
       <div class="d-flex flex-wrap gap-2 mb-4">
@@ -230,7 +227,6 @@ function filterCatalog() {
     return matchesSearch && matchesCategory && matchesPrice;
   });
 
-  // Сортировка
   if (sortBy === 'price-asc') {
     filteredProducts.sort((a, b) => a.price - b.price);
   } else if (sortBy === 'price-desc') {
@@ -239,7 +235,7 @@ function filterCatalog() {
 
   const catalogGrid = document.getElementById('catalog-grid');
   catalogGrid.innerHTML = filteredProducts.map(product => createProductCard(product)).join('');
-  
+
   document.getElementById('catalog-count').textContent = filteredProducts.length;
   document.getElementById('catalog-empty').style.display = filteredProducts.length === 0 ? 'block' : 'none';
 }

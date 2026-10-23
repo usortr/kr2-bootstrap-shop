@@ -46,25 +46,25 @@ footer { flex-shrink: 0; }
 a { color: var(--accent-hover); }
 a:hover { color: #7fb094; }
 
-/* === 1. ЕДИНАЯ ШАПКА === */
+/* === 1. ШАПКА (блок site-navbar) === */
 .site-navbar {
   min-height: var(--header-h);
   background-color: var(--surface) !important;
   border-bottom: 1px solid var(--border);
 }
-.site-navbar .navbar-brand { color: var(--text); font-weight: 700; }
-.site-navbar .navbar-brand i { color: var(--accent-hover); }
-.site-navbar .nav-link { color: var(--muted); transition: color .2s; }
-.site-navbar .nav-link:hover,
-.site-navbar .nav-link:focus-visible { color: var(--text); }
-.site-navbar .nav-link.active,
-.site-navbar .nav-link[aria-current="page"] {
+.site-navbar__brand { color: var(--text); font-weight: 700; }
+.site-navbar__brand i { color: var(--accent-hover); }
+.site-navbar__link {
+  color: var(--muted);
+  transition: color .2s;
+}
+.site-navbar__link:hover,
+.site-navbar__link:focus-visible { color: var(--text); }
+.site-navbar__link--active {
   color: var(--accent-hover);
-  /* font-weight не меняем — иначе пункт "прыгает" по ширине */
   position: relative;
 }
-.site-navbar .nav-link.active::after,
-.site-navbar .nav-link[aria-current="page"]::after {
+.site-navbar__link--active::after {
   content: "";
   position: absolute;
   left: 0;
@@ -74,18 +74,45 @@ a:hover { color: #7fb094; }
   background-color: var(--accent-hover);
   border-radius: 2px;
 }
-
-.site-navbar .nav-link:focus-visible {
+.site-navbar__link:focus-visible {
   outline: 2px solid var(--accent-hover);
   outline-offset: 4px;
   border-radius: 4px;
 }
-.site-navbar .navbar-toggler { border-color: var(--border); }
+.site-navbar__toggler { border-color: var(--border); }
 
-.cart-link { color: var(--muted) !important; opacity: 0.6; transition: opacity 0.2s, color .2s; }
-.cart-link:hover { opacity: 1; color: var(--text) !important; }
+.site-navbar__cart {
+  color: var(--muted) !important;
+  opacity: 0.6;
+  transition: opacity 0.2s, color .2s;
+}
+.site-navbar__cart:hover {
+  opacity: 1;
+  color: var(--text) !important;
+}
+/* Активная корзина: подчёркиваем только иконку */
+.site-navbar__cart.site-navbar__link--active {
+  color: var(--accent-hover) !important;
+  opacity: 1;
+}
+.site-navbar__cart.site-navbar__link--active::after {
+  display: none; /* убираем общее подчёркивание */
+}
+.site-navbar__cart.site-navbar__link--active .bi {
+  position: relative;
+}
+.site-navbar__cart.site-navbar__link--active .bi::after {
+  content: "";
+  position: absolute;
+  left: -4px;
+  right: -4px;
+  bottom: -6px;
+  height: 2px;
+  background-color: var(--accent-hover);
+  border-radius: 2px;
+}
 
-/* === 2. КНОПКИ === */
+/* === 2. КНОПКИ (тема Bootstrap — оставляем как есть) === */
 .btn-primary {
   --bs-btn-bg: var(--accent);
   --bs-btn-border-color: var(--accent);
@@ -110,13 +137,12 @@ a:hover { color: #7fb094; }
   --bs-btn-focus-shadow-rgb: 99, 148, 119;
 }
 
-/* === 3. ХЛЕБНЫЕ КРОШКИ === */
-.breadcrumb-item a { color: var(--muted); transition: color .2s; }
-.breadcrumb-item a:hover { color: var(--accent-hover); }
-.breadcrumb-item.active { color: var(--text); }
-.breadcrumb-item + .breadcrumb-item::before { color: var(--muted); }
+/* === 3. ХЛЕБНЫЕ КРОШКИ (Bootstrap .breadcrumb оставляем, свои классы — для тем) === */
+.breadcrumbs__link { color: var(--muted); transition: color .2s; }
+.breadcrumbs__link:hover { color: var(--accent-hover); }
+.breadcrumbs__current { color: var(--text); }
 
-/* === 4. КАРТОЧКИ ТОВАРОВ === */
+/* === 4. КАРТОЧКА ТОВАРА (блок product-card) === */
 .product-card {
   overflow: hidden;
   background-color: var(--surface);
@@ -129,7 +155,14 @@ a:hover { color: #7fb094; }
   box-shadow: 0 8px 24px rgba(0, 0, 0, .35);
 }
 
-.product-image-placeholder {
+.product-card__badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  z-index: 2;
+}
+
+.product-card__image {
   height: 220px;
   display: flex;
   align-items: center;
@@ -141,44 +174,63 @@ a:hover { color: #7fb094; }
   border-top-right-radius: calc(var(--bs-border-radius) - 1px);
   transition: background-color .18s ease;
 }
-.product-image-placeholder:hover { background-color: var(--accent-soft); }
+.product-card__image:hover { background-color: var(--accent-soft); }
 
-.product-image-placeholder .bi {
+.product-card__icon {
   font-size: 5rem;
   color: var(--muted) !important;
   transition: color .18s ease, transform .18s ease;
 }
-.product-image-placeholder:hover .bi {
+.product-card__image:hover .product-card__icon {
   color: var(--accent-hover) !important;
   transform: scale(1.05);
 }
 
-.product-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  z-index: 2;
+.product-card__title { transition: color .18s; }
+.product-card:hover .product-card__title { color: var(--accent-hover); }
+
+.product-card__rating .bi-star-fill { color: #f5c542; }
+
+.product-card__price { color: var(--accent-hover); font-weight: 700; }
+.product-card__old-price { color: var(--muted); text-decoration: line-through; font-size: 0.85rem; }
+
+/* === 5. КАТАЛОГ (блок catalog) === */
+.catalog {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  grid-template-areas: "filters products";
+  gap: 1.5rem;
+}
+.catalog__filters { grid-area: filters; }
+.catalog__products { grid-area: products; }
+.catalog__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
 }
 
-.price { color: var(--accent-hover); font-weight: 700; }
-.old-price { color: var(--muted); text-decoration: line-through; font-size: 0.85rem; }
-
-.product-card h3 a,
-.product-card .text-reset { transition: color .18s; }
-.product-card:hover h3 a { color: var(--accent-hover) !important; }
-
-.product-rating {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 0.9rem;
-}
-.product-rating .bi-star-fill {
-  color: #f5c542;
-  font-size: 0.95rem;
+.catalog__sidebar {
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+  align-self: flex-start;
 }
 
-/* === 5. КНОПКА "НАВЕРХ" === */
+@media (max-width: 991.98px) {
+  .catalog {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "filters"
+      "products";
+  }
+  .catalog__grid { grid-template-columns: repeat(2, 1fr); }
+  .catalog__sidebar { position: static; top: auto; }
+}
+
+@media (max-width: 575.98px) {
+  .catalog__grid { grid-template-columns: 1fr; }
+}
+
+/* === 6. КНОПКА «НАВЕРХ» (блок back-to-top) === */
 .back-to-top {
   position: fixed;
   right: 24px;
@@ -197,7 +249,7 @@ a:hover { color: #7fb094; }
   align-items: center;
   justify-content: center;
 }
-.back-to-top.is-visible {
+.back-to-top--visible {
   opacity: 1;
   visibility: visible;
 }
@@ -206,7 +258,7 @@ a:hover { color: #7fb094; }
   color: #fff;
 }
 
-/* === 6. ФОРМЫ === */
+/* === 7. ФОРМЫ (Bootstrap-классы оставляем) === */
 .form-control, .form-select {
   background-color: var(--bg);
   border-color: var(--border);
@@ -233,7 +285,7 @@ a:hover { color: #7fb094; }
   box-shadow: 0 0 0 .2rem rgba(99, 148, 119, .35);
 }
 
-/* === 7. МОДАЛКИ === */
+/* === 8. МОДАЛКИ (Bootstrap-классы оставляем) === */
 .modal-content {
   background-color: var(--surface);
   border: 1px solid var(--border);
@@ -242,7 +294,7 @@ a:hover { color: #7fb094; }
 .modal-header, .modal-footer { border-color: var(--border); }
 .btn-close { filter: invert(1) grayscale(100%) brightness(200%); }
 
-/* === 8. TOAST === */
+/* === 9. TOAST (Bootstrap-классы оставляем) === */
 .toast-container {
   position: fixed;
   top: calc(var(--header-h) + 12px);
@@ -255,25 +307,10 @@ a:hover { color: #7fb094; }
   color: var(--text);
 }
 
-/* === 9. ПОДВАЛ === */
+/* === 10. ПОДВАЛ (блок site-footer) === */
 .site-footer {
   background-color: var(--surface);
   border-top: 1px solid var(--border);
   color: var(--muted);
 }
-
-/* === STICKY-ФИЛЬТР В КАТАЛОГЕ === */
-.sticky-sidebar {
-  position: sticky;
-  top: calc(var(--header-h) + 16px);
-  /* не даём карточке растягиваться на всю высоту колонки */
-  align-self: flex-start;
-}
-
-/* На узких экранах sticky отключаем — фильтр и так идёт сверху */
-@media (max-width: 991.98px) {
-  .sticky-sidebar {
-    position: static;
-    top: auto;
-  }
-}
+.site-footer__text { color: var(--muted); }

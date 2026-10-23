@@ -111,6 +111,9 @@ document.addEventListener('DOMContentLoaded', () => {
       filterCatalog();
     });
   }
+
+  // 8. Интерактивный рейтинг и chip-кнопки в форме обратной связи
+  initContactExtras();
 });
 
 // Функция создания HTML карточки товара (БЭМ-классы для своих элементов)
@@ -238,4 +241,149 @@ function filterCatalog() {
 
   document.getElementById('catalog-count').textContent = filteredProducts.length;
   document.getElementById('catalog-empty').style.display = filteredProducts.length === 0 ? 'block' : 'none';
+}
+
+// Инициализация необычных полей формы «Обратная связь»
+function initContactExtras() {
+  /* --- Рейтинг звёздами --- */
+  const ratingEl = document.getElementById('contact-rating');
+  const ratingInput = document.getElementById('contact-rating-value');
+  const ratingHint = document.getElementById('contact-rating-hint');
+
+  if (ratingEl && ratingInput) {
+    const stars = Array.from(ratingEl.querySelectorAll('.rating__star'));
+
+    const setRating = (value) => {
+      ratingInput.value = value;
+      stars.forEach(star => {
+        const starValue = parseInt(star.dataset.value, 10);
+        const isActive = starValue <= value;
+        star.classList.toggle('is-active', isActive);
+        star.setAttribute('aria-checked', String(starValue === value));
+      });
+      if (ratingHint) {
+        const messages = {
+          1: 'Жаль, что так. Расскажите, что улучшить?',
+          2: 'Спасибо, будем стараться лучше.',
+          3: 'Спасибо, мы ещё работаем над удобством.',
+          4: 'Спасибо! Рады, что вам удобно.',
+          5: 'Спасибо! Нам очень приятно.'
+        };
+        ratingHint.textContent = value ? messages[value] : '';
+      }
+    };
+
+    stars.forEach(star => {
+      const value = parseInt(star.dataset.value, 10);
+      star.addEventListener('click', () => setRating(value));
+      star.addEventListener('mouseenter', () => {
+        // Предпросмотр: подсвечиваем все до hovered включительно
+        stars.forEach(s => {
+          s.classList.toggle('is-active', parseInt(s.dataset.value, 10) <= value);
+        });
+      });
+      star.addEventListener('mouseleave', () => {
+        // Возвращаем фактическое значение
+        const current = parseInt(ratingInput.value, 10) || 0;
+        stars.forEach(s => {
+          s.classList.toggle('is-active', parseInt(s.dataset.value, 10) <= current);
+        });
+      });
+    });
+  }
+
+  /* --- Chip-кнопки «Как вы о нас узнали» --- */
+  const chipsEl = document.getElementById('contact-source');
+  const chipsInput = document.getElementById('contact-source-value');
+
+  if (chipsEl && chipsInput) {
+    const chips = Array.from(chipsEl.querySelectorAll('.chips__item'));
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        const value = chip.dataset.value;
+        const wasActive = chip.classList.contains('is-active');
+
+        chips.forEach(c => {
+          c.classList.remove('is-active');
+          c.setAttribute('aria-pressed', 'false');
+        });
+
+        if (!wasActive) {
+          chip.classList.add('is-active');
+          chip.setAttribute('aria-pressed', 'true');
+          chipsInput.value = value;
+        } else {
+          chipsInput.value = '';
+        }
+      });
+    });
+  }
+
+  // Обработка формы обратной связи (на contacts.html)
+  const contactForm = document.getElementById('contact-form');
+  if (contactForm) {
+    contactForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      // Bootstrap-валидация
+      if (!contactForm.checkValidity()) {
+        contactForm.classList.add('was-validated');
+        return;
+      }
+      contactForm.classList.add('was-validated');
+
+      // Собираем данные (для демонстрации — просто выводим)
+      const formData = {
+        name: contactForm.querySelector('#contact-name').value,
+        email: contactForm.querySelector('#contact-email').value,
+        phone: contactForm.querySelector('#contact-phone').value,
+        comment: contactForm.querySelector('#contact-comment').value,
+        rating: parseInt(document.getElementById('contact-rating-value').value, 10) || null,
+        source: document.getElementById('contact-source-value').value || null,
+        agreement: contactForm.querySelector('#contact-agreement').checked
+      };
+      console.log('Заявка:', formData);
+
+      // Показываем toast
+      const toastEl = document.getElementById('app-toast');
+      const toastText = document.getElementById('app-toast-text');
+      if (toastEl && toastText) {
+        toastText.textContent = 'Форма успешно принята';
+        const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+        toast.show();
+      }
+
+      // Сброс
+      contactForm.reset();
+      contactForm.classList.remove('was-validated');
+      resetContactExtras();
+
+      // Закрываем модалку
+      const modalEl = document.getElementById('contactModal');
+      const modalInstance = bootstrap.Modal.getInstance(modalEl);
+      if (modalInstance) modalInstance.hide();
+    });
+  }
+}
+
+// Сброс необычных полей при успешной отправке формы обратной связи
+function resetContactExtras() {
+  const ratingInput = document.getElementById('contact-rating-value');
+  const ratingHint = document.getElementById('contact-rating-hint');
+  const ratingStars = document.querySelectorAll('#contact-rating .rating__star');
+  if (ratingInput) ratingInput.value = '';
+  if (ratingHint) ratingHint.textContent = '';
+  ratingStars.forEach(star => {
+    star.classList.remove('is-active');
+    star.setAttribute('aria-checked', 'false');
+  });
+
+  const chipsInput = document.getElementById('contact-source-value');
+  const chips = document.querySelectorAll('#contact-source .chips__item');
+  if (chipsInput) chipsInput.value = '';
+  chips.forEach(chip => {
+    chip.classList.remove('is-active');
+    chip.setAttribute('aria-pressed', 'false');
+  });
 }

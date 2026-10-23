@@ -395,3 +395,97 @@ a:hover { color: #7fb094; }
   from { opacity: 0; transform: translateY(-4px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* === РЕЙТИНГ ЗВЁЗДАМИ (блок rating) === */
+.rating {
+  display: inline-flex;
+  gap: 0.25rem;
+}
+
+.rating__star {
+  background: none;
+  border: 0;
+  padding: 0.25rem;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: transform 0.15s ease;
+}
+
+.rating__star .bi {
+  font-size: 1.75rem;
+  color: var(--border);
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+
+.rating__star:hover .bi,
+.rating__star:focus-visible .bi {
+  color: #c9a227; /* чуть темнее золота, чтобы hover был заметен */
+  transform: scale(1.1);
+}
+
+.rating__star:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+/* Активные (закрашенные) звёзды — золотые */
+.rating__star.is-active .bi {
+  color: #f5c542;
+}
+
+/* Предпросмотр при наведении на родителя */
+.rating:hover .rating__star .bi {
+  color: var(--border);
+}
+.rating:hover .rating__star:hover .bi,
+.rating:hover .rating__star:hover ~ .rating__star .bi {
+  color: #f5c542;
+}
+
+.rating__hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  min-height: 1.2em;
+}
+
+/* === CHIP-КНОПКИ (блок chips) === */
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chips__item {
+  padding: 0.35rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background-color: var(--bg);
+  color: var(--muted);
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease, transform 0.12s ease;
+}
+
+.chips__item:hover {
+  color: var(--text);
+  border-color: var(--accent-hover);
+}
+
+.chips__item:focus-visible {
+  outline: 2px solid var(--accent-hover);
+  outline-offset: 2px;
+}
+
+.chips__item.is-active {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+.chips__item.is-active:hover {
+  background-color: var(--accent-hover);
+  border-color: var(--accent-hover);
+  color: #fff;
+}

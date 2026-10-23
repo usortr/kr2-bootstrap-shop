@@ -86,9 +86,47 @@
             </select>
             <div class="invalid-feedback">Выберите пункт выдачи.</div>
           </div>
+                    <div class="mb-3">
+            <label class="form-label" for="contact-comment">Комментарий (текст заявки)</label>
+            <textarea class="form-control" id="contact-comment" name="comment" rows="3" minlength="10" required></textarea>
+            <div class="invalid-feedback">Опишите вопрос: минимум 10 символов.</div>
+          </div>
+
+          <!-- НОВОЕ: оценка сайта -->
           <div class="mb-3">
-            <label for="checkout-comment" class="form-label">Комментарий</label>
-            <textarea class="form-control" id="checkout-comment" rows="2"></textarea>
+            <span class="form-label d-block">Оцените удобство сайта</span>
+            <div class="rating" id="contact-rating" role="radiogroup" aria-label="Оценка удобства сайта от 1 до 5">
+              <button type="button" class="rating__star" data-value="1" role="radio" aria-checked="false" aria-label="1 из 5">
+                <i class="bi bi-star-fill"></i>
+              </button>
+              <button type="button" class="rating__star" data-value="2" role="radio" aria-checked="false" aria-label="2 из 5">
+                <i class="bi bi-star-fill"></i>
+              </button>
+              <button type="button" class="rating__star" data-value="3" role="radio" aria-checked="false" aria-label="3 из 5">
+                <i class="bi bi-star-fill"></i>
+              </button>
+              <button type="button" class="rating__star" data-value="4" role="radio" aria-checked="false" aria-label="4 из 5">
+                <i class="bi bi-star-fill"></i>
+              </button>
+              <button type="button" class="rating__star" data-value="5" role="radio" aria-checked="false" aria-label="5 из 5">
+                <i class="bi bi-star-fill"></i>
+              </button>
+            </div>
+            <input type="hidden" id="contact-rating-value" name="rating" value="">
+            <p class="rating__hint" id="contact-rating-hint" aria-live="polite"></p>
+          </div>
+
+          <!-- НОВОЕ: источник -->
+          <div class="mb-3">
+            <span class="form-label d-block">Как вы о нас узнали?</span>
+            <div class="chips" id="contact-source" role="group" aria-label="Как вы о нас узнали">
+              <button type="button" class="chips__item" data-value="search">Поиск</button>
+              <button type="button" class="chips__item" data-value="social">Соцсети</button>
+              <button type="button" class="chips__item" data-value="friends">Друзья</button>
+              <button type="button" class="chips__item" data-value="ads">Реклама</button>
+              <button type="button" class="chips__item" data-value="random">Случайно</button>
+            </div>
+            <input type="hidden" id="contact-source-value" name="source" value="">
           </div>
           <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="checkout-agreement" required>

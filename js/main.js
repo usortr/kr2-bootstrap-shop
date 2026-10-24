@@ -172,7 +172,7 @@ function createProductCard(product) {
 
 // Функция рендеринга детальной страницы товара (БЭМ-классы для своих элементов)
 function renderProductDetail(product) {
-  document.title = `${product.name} — ShopMarket`;
+  document.title = `${product.name} — SpruceMarket`;
 
   const badgeHtml = product.badge
     ? `<span class="badge text-bg-danger mb-3">${product.badge}</span>`

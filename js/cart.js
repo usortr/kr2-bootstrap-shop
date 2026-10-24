@@ -1,7 +1,7 @@
 // Корзина — централизованное подмножество PRODUCTS.
 // В localStorage храним только [{ id, quantity }], сами товары берём из products.js.
 
-const CART_KEY = 'shopmarket-cart';
+const CART_KEY = 'sprucemarket-cart';
 
 /* ===== Чтение / запись ===== */
 

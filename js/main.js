@@ -199,7 +199,7 @@ function renderProductDetail(product) {
     </div>
     <div class="col-lg-6">
       ${badgeHtml}
-      <h1 class="h3 fw-bold mb-3">${product.name}</h1>
+      <h1 class="h3 fw-bold mb-3 product-card__title product-card__title--detail">${product.name}</h1>
       <div class="mb-3">
         ${createRatingHtml(product, 'lg')}
       </div>

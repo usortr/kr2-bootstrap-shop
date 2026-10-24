@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const catalogGrid = document.getElementById('catalog-grid');
   if (catalogGrid) {
     catalogGrid.innerHTML = PRODUCTS.map(product => createProductCard(product)).join('');
+    // Обновляем счётчик сразу при загрузке (учёт всех товаров)
+    const catalogCount = document.getElementById('catalog-count');
+    if (catalogCount) catalogCount.textContent = PRODUCTS.length;
   }
 
   // 3. Рендеринг детальной страницы товара
@@ -115,6 +118,18 @@ document.addEventListener('DOMContentLoaded', () => {
   // 8. Интерактивный рейтинг и chip-кнопки в форме обратной связи
   initContactExtras();
 });
+
+// Функция создания HTML-блока рейтинга (переиспользуется в карточке и на странице товара)
+function createRatingHtml(product, modifier = '') {
+  const modifierClass = modifier ? ` product-card__rating--${modifier}` : '';
+  return `
+    <div class="product-card__rating${modifierClass}">
+      <i class="bi bi-star-fill"></i>
+      <span class="product-card__rating-value">${product.rating}</span>
+      <span class="product-card__rating-reviews text-muted ms-1">(${product.reviews} отзывов)</span>
+    </div>
+  `;
+}
 
 // Функция создания HTML карточки товара (БЭМ-классы для своих элементов)
 function createProductCard(product) {
@@ -213,7 +228,65 @@ function renderProductDetail(product) {
         <tbody>${specsHtml}</tbody>
       </table>
     </div>
+    <div class="col-12 mt-5">
+      <div class="related">
+        <div class="related__header">
+          <h2 class="h4 fw-bold mb-0">Похожие товары</h2>
+          <a href="catalog.html" class="btn btn-outline-primary btn-sm">Смотреть все</a>
+        </div>
+        <div class="related__track" id="related-products">
+          ${renderRelatedProducts(product)}
+        </div>
+      </div>
+    </div>
   `;
+}
+
+// Функция рендеринга похожих товаров (та же категория, кроме текущего, до 8 штук)
+function renderRelatedProducts(product) {
+  const related = PRODUCTS
+    .filter(item => item.category === product.category && item.id !== product.id)
+    .slice(0, 8);
+
+  if (related.length === 0) {
+    return '<p class="text-muted mb-0">Похожих товаров пока нет.</p>';
+  }
+
+  // Возвращаем карточки без обёртки .col, чтобы они жили в горизонтальной ленте
+  return related.map(item => {
+    const badgeHtml = item.badge
+      ? `<span class="badge text-bg-danger product-card__badge">${item.badge}</span>`
+      : '';
+    const oldPriceHtml = item.oldPrice
+      ? `<span class="product-card__old-price ms-2">${item.oldPrice.toLocaleString('ru-RU')} ₽</span>`
+      : '';
+
+    return `
+      <article class="card product-card product-card--related h-100 position-relative">
+        ${badgeHtml}
+        <a href="product.html?id=${item.id}" class="text-decoration-none">
+          <div class="product-card__image">
+            <i class="bi ${item.icon} product-card__icon"></i>
+          </div>
+        </a>
+        <div class="card-body d-flex flex-column">
+          <a href="product.html?id=${item.id}" class="text-decoration-none text-reset">
+            <h3 class="h6 mb-2 product-card__title">${item.name}</h3>
+          </a>
+          <div class="mb-2">
+            ${createRatingHtml(item)}
+          </div>
+          <div class="mb-3">
+            <span class="product-card__price">${item.price.toLocaleString('ru-RU')} ₽</span>
+            ${oldPriceHtml}
+          </div>
+          <button class="btn btn-primary btn-sm w-100 mt-auto" onclick="addToCart(${item.id})">
+            В корзину
+          </button>
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 // Функция фильтрации каталога
@@ -388,16 +461,4 @@ function resetContactExtras() {
     chip.classList.remove('is-active');
     chip.setAttribute('aria-pressed', 'false');
   });
-}
-
-// Функция создания HTML-блока рейтинга (переиспользуется в карточке и на странице товара)
-function createRatingHtml(product, modifier = '') {
-  const modifierClass = modifier ? ` product-card__rating--${modifier}` : '';
-  return `
-    <div class="product-card__rating${modifierClass}">
-      <i class="bi bi-star-fill"></i>
-      <span class="product-card__rating-value">${product.rating}</span>
-      <span class="product-card__rating-reviews text-muted ms-1">(${product.reviews} отзывов)</span>
-    </div>
-  `;
 }

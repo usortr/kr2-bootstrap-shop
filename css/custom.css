@@ -196,7 +196,20 @@ a:hover { color: #7fb094; }
   font-size: 0.9rem;
   color: var(--text);
 }
+.product-card__rating {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  color: var(--text);
+}
 .product-card__rating .bi-star-fill { color: #f5c542; }
+.product-card__rating-value { font-weight: 600; }
+.product-card__rating-reviews { font-size: 0.85rem; }
+
+/* Модификатор для страницы товара */
+.product-card__rating--lg { font-size: 1rem; }
+.product-card__rating--lg .bi-star-fill { font-size: 1.15rem; }
 .product-card__rating-value { font-weight: 600; }
 .product-card__rating-reviews { font-size: 0.85rem; }
 
@@ -243,6 +256,49 @@ a:hover { color: #7fb094; }
 
 @media (max-width: 575.98px) {
   .catalog__grid { grid-template-columns: 1fr; }
+}
+
+/* === 5.1. ПОХОЖИЕ ТОВАРЫ (блок related) === */
+.related__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.related__track {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.75rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) var(--surface-2);
+}
+
+.related__track::-webkit-scrollbar {
+  height: 8px;
+}
+.related__track::-webkit-scrollbar-track {
+  background-color: var(--surface-2);
+  border-radius: 999px;
+}
+.related__track::-webkit-scrollbar-thumb {
+  background-color: var(--accent);
+  border-radius: 999px;
+}
+.related__track::-webkit-scrollbar-thumb:hover {
+  background-color: var(--accent-hover);
+}
+
+.product-card--related {
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+}
+
+@media (max-width: 575.98px) {
+  .product-card--related { flex-basis: 200px; }
 }
 
 /* === 6. КНОПКА «НАВЕРХ» (блок back-to-top) === */

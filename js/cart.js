@@ -125,17 +125,17 @@ function renderCart() {
 
     const itemElement = document.createElement('div');
     itemElement.className = 'card mb-3';
-    itemElement.innerHTML = `
+        itemElement.innerHTML = `
       <div class="card-body">
-        <div class="d-flex justify-content-between align-items-center">
-          <div class="d-flex align-items-center">
+        <div class="d-flex justify-content-between align-items-center gap-3">
+          <div class="d-flex align-items-center flex-grow-1 cart-item__info">
             <i class="bi ${product.icon} fs-3 me-3 product-card__icon"></i>
-            <div>
-              <h6 class="mb-1 product-card__title">${product.name}</h6>
+            <div class="cart-item__text">
+              <h6 class="mb-1 product-card__title product-card__title--cart">${product.name}</h6>
               <p class="mb-0 text-muted small">${product.price.toLocaleString('ru-RU')} ₽ за шт.</p>
             </div>
           </div>
-          <div class="d-flex align-items-center gap-2">
+          <div class="d-flex align-items-center gap-2 flex-shrink-0">
             <button class="btn btn-sm btn-outline-secondary" type="button"
                     onclick="decreaseFromCart(${product.id})" aria-label="Уменьшить количество">−</button>
             <span class="fw-bold">${item.quantity}</span>

@@ -207,6 +207,23 @@ a:hover { color: #7fb094; }
   word-break: break-word;
   hyphens: auto;
 }
+/* Название в карточке корзины — одна строка с обрезкой по ширине */
+.product-card__title--cart {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: unset;
+  -webkit-box-orient: initial;
+  min-height: 0;
+  max-width: 100%;
+}
+
+/* Разрешаем flex-элементам сжиматься, чтобы название обрезалось, а не растягивало карточку */
+.cart-item__info,
+.cart-item__text {
+  min-width: 0;
+}
 .product-card:hover .product-card__title { color: var(--accent-hover); }
 
 .product-card__rating {

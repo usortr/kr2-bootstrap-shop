@@ -119,16 +119,36 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactExtras();
 });
 
+// Склонение слова «отзыв» по числу
+function pluralizeReviews(count) {
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 === 1 && mod100 !== 11) return 'отзыв';
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) return 'отзыва';
+  return 'отзывов';
+}
+
 // Функция создания HTML-блока рейтинга (переиспользуется в карточке и на странице товара)
 function createRatingHtml(product, modifier = '') {
   const modifierClass = modifier ? ` product-card__rating--${modifier}` : '';
+  const { average, count } = getProductRating(product);
   return `
     <div class="product-card__rating${modifierClass}">
       <i class="bi bi-star-fill"></i>
-      <span class="product-card__rating-value">${product.rating}</span>
-      <span class="product-card__rating-reviews text-muted ms-1">(${product.reviews} отзывов)</span>
+      <span class="product-card__rating-value">${average}</span>
+      <span class="product-card__rating-reviews text-muted ms-1">(${count} ${pluralizeReviews(count)})</span>
     </div>
   `;
+}
+
+// Экранирование пользовательского текста перед вставкой в innerHTML
+function escapeHtml(text) {
+  return String(text)
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;');
 }
 
 // Функция создания HTML карточки товара (БЭМ-классы для своих элементов)
@@ -239,6 +259,9 @@ function renderProductDetail(product) {
         </div>
       </div>
     </div>
+    <div class="col-12 mt-5">
+      ${renderReviews(product)}
+    </div>
   `;
 }
 
@@ -287,6 +310,79 @@ function renderRelatedProducts(product) {
       </article>
     `;
   }).join('');
+}
+
+// Функция создания HTML одного отзыва
+function createReviewItem(review) {
+  const initials = review.author
+    .trim()
+    .split(/\s+/)
+    .map(part => part.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .join('');
+
+  const stars = Array.from({ length: 5 }, (_, i) =>
+    `<i class="bi bi-star${i < review.rating ? '-fill' : ''}"></i>`
+  ).join('');
+
+  const dateLabel = new Date(review.date).toLocaleDateString('ru-RU', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  return `
+    <article class="reviews__item">
+      <div class="reviews__author">
+        <span class="reviews__initials" aria-hidden="true">${escapeHtml(initials)}</span>
+        <div>
+          <p class="reviews__name mb-0">${escapeHtml(review.author)}</p>
+          <p class="reviews__date mb-0">${dateLabel}</p>
+        </div>
+      </div>
+      <div class="reviews__stars" aria-label="Оценка: ${review.rating} из 5">${stars}</div>
+      <p class="reviews__text mb-0">${escapeHtml(review.text)}</p>
+    </article>
+  `;
+}
+
+// Функция рендеринга блока «Отзывы» на странице товара
+function renderReviews(product) {
+  const { average, count } = getProductRating(product);
+
+  if (!product.reviewsList || product.reviewsList.length === 0) {
+    return `
+      <div class="reviews">
+        <h2 class="h4 fw-bold mb-3">Отзывы</h2>
+        <div class="alert alert-secondary mb-0">Отзывов пока нет.</div>
+      </div>
+    `;
+  }
+
+  // Сортируем по дате: новые сверху
+  const sortedReviews = [...product.reviewsList].sort(
+    (a, b) => new Date(b.date) - new Date(a.date)
+  );
+
+  const summaryStars = Array.from({ length: 5 }, (_, i) =>
+    `<i class="bi bi-star${i < Math.round(average) ? '-fill' : ''}"></i>`
+  ).join('');
+
+  return `
+    <div class="reviews">
+      <div class="reviews__header">
+        <h2 class="h4 fw-bold mb-0">Отзывы</h2>
+        <div class="reviews__summary">
+          <span class="reviews__average">${average}</span>
+          <span class="reviews__stars" aria-hidden="true">${summaryStars}</span>
+          <span class="reviews__count">${count} ${pluralizeReviews(count)}</span>
+        </div>
+      </div>
+      <div class="reviews__list">
+        ${sortedReviews.map(createReviewItem).join('')}
+      </div>
+    </div>
+  `;
 }
 
 // Функция фильтрации каталога
